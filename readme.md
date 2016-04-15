@@ -36,6 +36,8 @@ Phil automates setting up local dev domains for use with Apache.
     -unset -- removes a config param
     [domain] [folder] -- sets up a new domain by writing to `hosts` and `vhosts`
                          note that you will likely need to sudo this command
+    -version -- check the current version of Phil and check for updates
+    -update -- update Phil to the latest version
     -help -- read this help screen
 
 Updating Phil: phil is tracked with git to update Phil to the latest version, simply cd into ~/.phil and run `git pull`

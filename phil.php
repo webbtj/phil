@@ -256,6 +256,11 @@ class Phil{
     public function version(){
         $local = file_get_contents(dirname(__FILE__) . '/version');
         output("$local", BLUE_TEXT);
+        $remote = file_get_contents("https://raw.githubusercontent.com/webbtj/phil/master/version");
+        if($local == $remote)
+            output("This is the latest version.", GREEN_TEXT);
+        else
+            output("Phil is out of date. Please update to $remote by running `phil -update`", RED_TEXT);
     }
 
     function help(){
@@ -284,6 +289,8 @@ class Phil{
         output("    [domain] [folder] -- sets up a new domain by writing to `hosts` and `vhosts`", GREEN_TEXT);
         output("                         note that you will likely need to sudo this command", GREEN_TEXT);
         output("    -help -- read this help screen", BLUE_TEXT);
+        output("    -version -- check the current version of Phil and check for updates", BLUE_TEXT);
+        output("    -update -- update Phil to the latest version", BLUE_TEXT);
         output("", BLUE_TEXT);
         output("Updating Phil: phil is tracked with git to update Phil to the latest version, simply cd into ~/.phil and run `git pull`", BLUE_TEXT);
         output("", BLUE_TEXT);
