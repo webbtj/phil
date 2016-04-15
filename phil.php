@@ -244,7 +244,7 @@ class Phil{
         output("===============================================================================", BLUE_TEXT);
         output("", BLUE_TEXT);
 
-        output("Phil automates settings up local dev domains for use with Apache.", BLUE_TEXT);
+        output("Phil automates setting up local dev domains for use with Apache.", BLUE_TEXT);
         output("", BLUE_TEXT);
         output("Setting up config variables:", BLUE_TEXT);
         output("    To set up a new config variable run `phil -set var_key var_value` where", BLUE_TEXT);
@@ -266,9 +266,10 @@ class Phil{
         output("                         note that you will likely need to sudo this command", GREEN_TEXT);
         output("    -help -- read this help screen", BLUE_TEXT);
         output("", BLUE_TEXT);
-        output("Updating Phil: phil is tracked with git to update Phil to latest version, simply cd into ~/.phil and run `git pull`", BLUE_TEXT);
+        output("Updating Phil: phil is tracked with git to update Phil to the latest version, simply cd into ~/.phil and run `git pull`", BLUE_TEXT);
         output("", BLUE_TEXT);
-        output("Customizing Output: to customize the output to your hosts and vhosts files, edit the template.hosts.txt and template.vhost.txt files in ~/.phil after running `phil -init`", BLUE_TEXT);
+        output("Customizing Output: to customize the output to your hosts and vhosts files", BLUE_TEXT);
+        output("    edit the template.hosts.txt and template.vhost.txt files in ~/.phil after running `phil -init`", BLUE_TEXT);
         output("", BLUE_TEXT);
         output("Made by @webbtj ~ Lazy AF", BLUE_TEXT);
         output("", BLUE_TEXT);
