@@ -64,13 +64,23 @@ class Phil{
 
     function init_config(){
         $config_filename = dirname(__FILE__) . '/config.json';
-        @unlink($config);
+        @unlink($config_filename);
 
         $dummy = new stdClass;
         $defaults = (array) $this->defaults($dummy);
 
         foreach($defaults as $k => $v){
             $this->set_key(['phil.php', '-set', $k, $v], true);
+        }
+
+        if(!file_exists(dirname(__FILE__) . '/template.hosts.txt')){
+            $template = file_get_contents(dirname(__FILE__) . '/default.hosts.txt');
+            file_put_contents('template.hosts.txt', $template);
+        }
+
+        if(!file_exists(dirname(__FILE__) . '/template.vhost.txt')){
+            $template = file_get_contents(dirname(__FILE__) . '/default.vhost.txt');
+            file_put_contents('template.vhost.txt', $template);
         }
 
         output("Successfully initialized default config " . random_emoji(), GREEN_TEXT);
@@ -201,28 +211,21 @@ class Phil{
     }
 
     function write_hosts($config){
-        $output = "
-#Added by Uncle Phil
-127.0.0.1       " . $config->domain;
+        $output = file_get_contents('template.hosts.txt');
+        $config_array = (array) $config;
+        foreach($config_array as $k => $v){
+            $output = str_replace('{' . $k . '}', $v, $output);
+        }
 
         file_put_contents($config->hosts, $output, FILE_APPEND);
     }
 
     function write_vhost($config){
-        $output = "
-#Added by Uncle Phil
-<VirtualHost *:" . $config->port . ">
-        ServerName          " . $config->domain . "
-        ServerAdmin         " . $config->server_admin . "
-        DocumentRoot        " . $config->document_root . "
-        php_admin_value     upload_max_filesize " . $config->upload_max_filesize . "
-        php_admin_value     post_max_size " . $config->post_max_size . "
-        php_admin_value     short_open_tag " . $config->short_open_tag . "
-        Options             " . $config->options . "
-        RewriteEngine       " . $config->rewrite_engine . "
-        php_admin_value     display_errors " . $config->display_errors . "
-</VirtualHost>
-        ";
+        $output = file_get_contents('template.vhost.txt');
+        $config_array = (array) $config;
+        foreach($config_array as $k => $v){
+            $output = str_replace('{' . $k . '}', $v, $output);
+        }
 
         if(!file_exists($config->document_root)){
             output("Attempting to create " . $config->document_root . " because it does not yet exist", YELLOW_TEXT);

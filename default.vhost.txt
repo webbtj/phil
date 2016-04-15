@@ -1,0 +1,13 @@
+
+#Added by Uncle Phil
+<VirtualHost *:{port}>
+        ServerName          {domain}
+        ServerAdmin         {server_admin}
+        DocumentRoot        {document_root}
+        php_admin_value     upload_max_filesize {upload_max_filesize}
+        php_admin_value     post_max_size {post_max_size}
+        php_admin_value     short_open_tag {short_open_tag}
+        Options             {options}
+        RewriteEngine       {rewrite_engine}
+        php_admin_value     display_errors {display_errors}
+</VirtualHost>
