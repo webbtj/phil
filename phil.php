@@ -38,6 +38,11 @@ class Phil{
             exit;
         }
 
+        if($args[1] == '-v' || $args[1] == '-version'){
+            $this->version();
+            exit;
+        }
+
         if(count($args) == 3){
             $this->setup_domain($args);
         }
@@ -246,6 +251,11 @@ class Phil{
 
     function update(){
         exec('cd ~/.phil; git pull');
+    }
+
+    public function version(){
+        $local = file_get_contents(dirname(__FILE__) . '/version');
+        output("$local", BLUE_TEXT);
     }
 
     function help(){
