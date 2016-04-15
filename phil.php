@@ -246,7 +246,7 @@ class Phil{
         output("    -help -- read this help screen", BLUE_TEXT);
         output("", BLUE_TEXT);
         output("", BLUE_TEXT);
-        output("Made by @webbtj - Lazy AF", BLUE_TEXT);
+        output("Made by @webbtj ~ Lazy AF", BLUE_TEXT);
         output("", BLUE_TEXT);
         output("===============================================================================", BLUE_TEXT);
         output("", BLUE_TEXT);
