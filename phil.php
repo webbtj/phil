@@ -88,7 +88,7 @@ class Phil{
         if(count($args) > 4)
             throw_error("Too many arguments, please see help by running `phil -help` for usage.");
 
-        $key = preg_replace('/[^a-z]/', '', strtolower($args[2]));
+        $key = preg_replace('/[^a-z_]/', '', strtolower($args[2]));
         $value = $args[3];
 
         $config->$key = $value;
@@ -165,6 +165,13 @@ class Phil{
         $this->write_hosts($config);
         $this->write_vhost($config);
 
+        if($config->apachectl){
+            output("Attempting to restart Apache, this will not affect the success status of the operation!", YELLOW_TEXT);
+            exec("sudo " . $config->apachectl . " restart 2>/dev/null");
+        }else{
+            output("You haven't set `apachectl` yet. If you set it, I can try to automatically restart Apache for you too.", YELLOW_TEXT);
+        }
+
         output("Successfully setup " . $config->domain . " pointing to " . $config->document_root . " " . random_emoji(), GREEN_TEXT);
         output("    \"Tiny onions swimming in a sea of cream sauce.\"", BLUE_TEXT);
     }
@@ -182,7 +189,8 @@ class Phil{
             'document_root' => '/var/www/vhosts',
             'ip' => '127.0.0.1',
             'hosts' => '/etc/hosts',
-            'vhosts' => '/etc/httpd/conf/httpd.conf'
+            'vhosts' => '/etc/httpd/conf/httpd.conf',
+            'apachectl' => ''
         ];
         foreach($defaults as $k => $v){
             if(!isset($config->$k))
@@ -216,6 +224,15 @@ class Phil{
 </VirtualHost>
         ";
 
+        if(!file_exists($config->document_root)){
+            output("Attempting to create " . $config->document_root . " because it does not yet exist", YELLOW_TEXT);
+            $create_dir = mkdir($config->document_root, 0755);
+            if($create_dir)
+                output($config->document_root . " created successfully, note that is it currently owned by root. You may want to `chown` and/or `chmod`.", GREEN_TEXT);
+            else
+                output("Could not create " . $config->document_root . "; probably not allowed", RED_TEXT);
+        }
+
         file_put_contents($config->vhosts, $output, FILE_APPEND);
     }
 
@@ -243,6 +260,7 @@ class Phil{
         output("    -get -- gets the value of all config params", BLUE_TEXT);
         output("    -unset -- removes a config param", BLUE_TEXT);
         output("    [domain] [folder] -- sets up a new domain by writing to `hosts` and `vhosts`", GREEN_TEXT);
+        output("                         note that you will likely need to sudo this command", GREEN_TEXT);
         output("    -help -- read this help screen", BLUE_TEXT);
         output("", BLUE_TEXT);
         output("", BLUE_TEXT);
