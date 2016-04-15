@@ -45,3 +45,4 @@ Customizing Output: to customize the output to your hosts and vhosts files
 
 Made by @webbtj ~ Lazy AF
 
+Tested in OSX 10.11.3 with PHP 5.6.8
