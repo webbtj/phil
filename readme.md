@@ -10,6 +10,11 @@ one command install you can run the following in your terminal:
 php -r "eval(file_get_contents('http://goo.gl/8bWMsW'));"
 ```
 
+Why this sneaky "eval some random contents url" thing? It's mainly just a convenience.
+* http://goo.gl/8bWMsW redirects to [this gist](https://gist.githubusercontent.com/webbtj/6f6233a4ce32da064a1d451ca8a38d7a/raw/1b222b7e7dd000acdcd1c49fec2a9df74ae64ff1/install-phil.php)
+* The gist is some php script grabs the install.php script from this repo, stores it to a temp location and runs it.
+* If you're uneasy, feel free to trace things back yourself. Or just download and run the install.php script yourself.
+
 Once Phil is installed (and you've followed the on screen instructions, including adding a `sudo` alias in your
 `~/.bash_profile` and re-sourcing your `~/.bash_profile`) you'll want to run `phil -init` to initialize your
 templates and config file. See the Phil Commands section below for more usage details.
@@ -48,3 +53,5 @@ Customizing Output: to customize the output to your hosts and vhosts files
 Made by @webbtj ~ Lazy AF
 
 Tested in OSX 10.11.3 with PHP 5.6.8
+
+License: MIT, see license.txt for more info
