@@ -33,6 +33,11 @@ class Phil{
             exit;
         }
 
+        if($args[1] == '-update'){
+            $this->update();
+            exit;
+        }
+
         if(count($args) == 3){
             $this->setup_domain($args);
         }
@@ -237,6 +242,10 @@ class Phil{
         }
 
         file_put_contents($config->vhosts, $output, FILE_APPEND);
+    }
+
+    function update(){
+        exec('cd ~/.phil; git pull');
     }
 
     function help(){
