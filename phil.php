@@ -221,7 +221,7 @@ class Phil{
     }
 
     function write_hosts($config){
-        $output = file_get_contents('template.hosts.txt');
+        $output = file_get_contents(dirname(__FILE__) . '/template.hosts.txt');
         $config_array = (array) $config;
         foreach($config_array as $k => $v){
             $output = str_replace('{' . $k . '}', $v, $output);
@@ -231,7 +231,7 @@ class Phil{
     }
 
     function write_vhost($config){
-        $output = file_get_contents('template.vhost.txt');
+        $output = file_get_contents(dirname(__FILE__) . '/template.vhost.txt');
         $config_array = (array) $config;
         foreach($config_array as $k => $v){
             $output = str_replace('{' . $k . '}', $v, $output);
