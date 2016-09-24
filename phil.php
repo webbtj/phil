@@ -43,7 +43,7 @@ class Phil{
             exit;
         }
 
-        if(count($args) == 3){
+        if(count($args) == 3 || count($args) == 4){
             $this->setup_domain($args);
         }
     }
@@ -180,8 +180,11 @@ class Phil{
         $config = $this->defaults($config);
 
         $config->document_root = str_replace('//', '/', $config->document_root . '/' . $args[2]);
+        if(isset($args[3]) && !empty($args[3])){
+            $config->document_root_subdir = $args[3];
+        }
         $config->domain = $args[1];
-        
+
         $this->write_hosts($config);
         $this->write_vhost($config);
 
@@ -192,7 +195,12 @@ class Phil{
             output("You haven't set `apachectl` yet. If you set it, I can try to automatically restart Apache for you too.", YELLOW_TEXT);
         }
 
-        output("Successfully setup " . $config->domain . " pointing to " . $config->document_root . " " . random_emoji(), GREEN_TEXT);
+        $host_path = $config->document_root;
+        if(isset($config->document_root_subdir)){
+            $host_path .= "/" . $config->document_root_subdir;
+        }
+
+        output("Successfully setup " . $config->domain . " pointing to " . $host_path . " " . random_emoji(), GREEN_TEXT);
         output("    \"Tiny onions swimming in a sea of cream sauce.\"", BLUE_TEXT);
     }
 
@@ -232,7 +240,15 @@ class Phil{
 
     function write_vhost($config){
         $output = file_get_contents(dirname(__FILE__) . '/template.vhost.txt');
+
         $config_array = (array) $config;
+
+        $subdir = false;
+        if(isset($config->document_root_subdir)){
+            $subdir = $config->document_root . "/" . $config->document_root_subdir;
+            $config_array['document_root'] = $subdir;
+        }
+
         foreach($config_array as $k => $v){
             $output = str_replace('{' . $k . '}', $v, $output);
         }
@@ -240,10 +256,20 @@ class Phil{
         if(!file_exists($config->document_root)){
             output("Attempting to create " . $config->document_root . " because it does not yet exist", YELLOW_TEXT);
             $create_dir = mkdir($config->document_root, 0755);
-            if($create_dir)
+            if($create_dir){
                 output($config->document_root . " created successfully, note that is it currently owned by root. You may want to `chown` and/or `chmod`.", GREEN_TEXT);
+            }
             else
                 output("Could not create " . $config->document_root . "; probably not allowed", RED_TEXT);
+        }
+
+        if($subdir && !file_exists($subdir)){
+            output("Attempting to create " . $subdir . " because it does not yet exist", YELLOW_TEXT);
+            $create_dir = mkdir($subdir, 0755);
+            if($create_dir)
+                output($subdir . " created successfully, note that is it currently owned by root. You may want to `chown` and/or `chmod`.", GREEN_TEXT);
+            else
+                output("Could not create " . $subdir . "; probably not allowed", RED_TEXT);
         }
 
         file_put_contents($config->vhosts, $output, FILE_APPEND);
@@ -286,8 +312,10 @@ class Phil{
         output("    -get [key] -- gets the value of a given config param", BLUE_TEXT);
         output("    -get -- gets the value of all config params", BLUE_TEXT);
         output("    -unset -- removes a config param", BLUE_TEXT);
-        output("    [domain] [folder] -- sets up a new domain by writing to `hosts` and `vhosts`", GREEN_TEXT);
-        output("                         note that you will likely need to sudo this command", GREEN_TEXT);
+        output("    [domain] [folder] ([subdir]) -- sets up a new domain by writing to `hosts` and `vhosts`", GREEN_TEXT);
+        output("                                    you can optionally pass a subdir argument if the site", GREEN_TEXT);
+        output("                                        is to be served from a subdir", GREEN_TEXT);
+        output("                                    note that you will likely need to sudo this command", GREEN_TEXT);
         output("    -help -- read this help screen", BLUE_TEXT);
         output("    -version -- check the current version of Phil and check for updates", BLUE_TEXT);
         output("    -update -- update Phil to the latest version", BLUE_TEXT);
